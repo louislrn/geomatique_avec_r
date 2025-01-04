@@ -11,7 +11,7 @@ plot(elev)
 ```
 
 
-Un raster contient toujours des données numériques, mais il peut aussi bien s'agir de données quantitatives que de données qualitatives (catégorielles) codées numériquement.
+Un raster contient **toujours des données numériques**, mais il peut aussi bien s'agir de données quantitatives que de données qualitatives (catégorielles) codées numériquement.
 
 Précisez le type de données stockées avec l'argument `type` (`type = "continuous"` par défaut), pour les afficher correctement.
 

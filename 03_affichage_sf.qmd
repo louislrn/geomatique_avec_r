@@ -24,6 +24,14 @@ com_df2 <- st_drop_geometry(com)
 identical(com_df1, com_df2)
 head(com_df1, n = 3)
 ```
+
+Supprimer les géométries permet de réduire la taille des tableaux
+
+```{r}
+object.size(com)
+object.size(com_df1)
+```
+
 :::
 
 
