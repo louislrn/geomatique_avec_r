@@ -83,3 +83,18 @@ clc_point$clc <- as.factor(clc_point$clc)
 plot(clc_point["clc"], pch = 20, cex = 2)
 
 ```
+
+
+## Exercice {.unnumbered}
+
+1. Reprojetez les données raster d'altitude dans le système de coordonnées Lambert 93 et  découpez la pour la faire correspondre aux limites communales de Catus.
+
+2. Quelles sont les altitudes minimales et maximales au sein de la commune de Catus ?
+
+3. Faites de même avec les données d'occupation du sol. N'oubliez pas d'attribuer les intitulés réels des types d’occupation du sol.
+
+4. Combien de modalités différentes d'occupation du sol peut-on observer dans la commune de Catus ? Laquelle est la plus présente ?
+
+5. Reclassifiez ces modalités selon les nomenclatures CORINE Land Cover de niveaux 2 et 1.
+
+6. Convertissez l'objet raster en vecteur.
