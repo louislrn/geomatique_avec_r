@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.49">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -368,6 +368,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#rasterisation" id="toc-rasterisation" class="nav-link active" data-scroll-target="#rasterisation"><span class="header-section-number">14.1</span> Rasterisation</a></li>
   <li><a href="#vectorisation" id="toc-vectorisation" class="nav-link" data-scroll-target="#vectorisation"><span class="header-section-number">14.2</span> Vectorisation</a></li>
+  <li><a href="#exercice" id="toc-exercice" class="nav-link" data-scroll-target="#exercice">Exercice</a></li>
   </ul>
 </nav>
     </div>
@@ -444,32 +445,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 Il est ensuite possible de les transformer en objets <code>sf</code> avec la fonction <code>st_as_sf()</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>clc <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="at">x =</span> <span class="st">"data/clc.tif"</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Reclassifions le raster CLC</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>reclassif <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">199</span>, <span class="dv">1</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                      <span class="dv">200</span>, <span class="dv">299</span>, <span class="dv">2</span>,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                      <span class="dv">300</span>, <span class="dv">399</span>, <span class="dv">3</span>,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                      <span class="dv">400</span>, <span class="dv">499</span>, <span class="dv">4</span>,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                      <span class="dv">500</span>, <span class="dv">599</span>, <span class="dv">5</span>),</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ncol =</span> <span class="dv">3</span>, </span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                    <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>clc <span class="ot">&lt;-</span> <span class="fu">classify</span>(clc, <span class="at">rcl =</span> reclassif)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Changeons d'abord la résolution du raster CLC</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>clc_lower_model <span class="ot">&lt;-</span> clc</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">res</span>(clc_lower_model) <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>clc_lower <span class="ot">&lt;-</span> <span class="fu">resample</span>(<span class="at">x =</span> clc, <span class="at">y =</span> clc_lower_model, <span class="at">method =</span> <span class="st">"near"</span>) </span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformation en polygones</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>clc_poly <span class="ot">&lt;-</span> <span class="fu">as.polygons</span>(clc_lower)</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>clc_poly <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(clc_poly)</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage </span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>clc_poly<span class="sc">$</span>clc <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(clc_poly<span class="sc">$</span>clc)</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(clc_poly[<span class="st">"clc"</span>])</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>#&gt; Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>clc <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="at">x =</span> <span class="st">"data/clc.tif"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Reclassifions le raster CLC</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>reclassif <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">199</span>, <span class="dv">1</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                      <span class="dv">200</span>, <span class="dv">299</span>, <span class="dv">2</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                      <span class="dv">300</span>, <span class="dv">399</span>, <span class="dv">3</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                      <span class="dv">400</span>, <span class="dv">499</span>, <span class="dv">4</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                      <span class="dv">500</span>, <span class="dv">599</span>, <span class="dv">5</span>),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ncol =</span> <span class="dv">3</span>, </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>clc <span class="ot">&lt;-</span> <span class="fu">classify</span>(clc, <span class="at">rcl =</span> reclassif)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Changeons d'abord la résolution du raster CLC</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>clc_lower_model <span class="ot">&lt;-</span> clc</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="fu">res</span>(clc_lower_model) <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>clc_lower <span class="ot">&lt;-</span> <span class="fu">resample</span>(<span class="at">x =</span> clc, <span class="at">y =</span> clc_lower_model, <span class="at">method =</span> <span class="st">"near"</span>) </span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformation en polygones</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>clc_poly <span class="ot">&lt;-</span> <span class="fu">as.polygons</span>(clc_lower)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>clc_poly <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(clc_poly)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage </span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>clc_poly<span class="sc">$</span>clc <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(clc_poly<span class="sc">$</span>clc)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(clc_poly[<span class="st">"clc"</span>])</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -480,10 +484,10 @@ Il est ensuite possible de les transformer en objets <code>sf</code> avec la fon
 </div>
 <p>Transformer un raster en points vectoriels avec la fonction <code>as.points()</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>clc_point <span class="ot">&lt;-</span> <span class="fu">as.points</span>(clc_lower)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>clc_point <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(clc_point)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>clc_point<span class="sc">$</span>clc <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(clc_point<span class="sc">$</span>clc)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(clc_point[<span class="st">"clc"</span>], <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">cex =</span> <span class="dv">2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>clc_point <span class="ot">&lt;-</span> <span class="fu">as.points</span>(clc_lower)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>clc_point <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(clc_point)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>clc_point<span class="sc">$</span>clc <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(clc_point<span class="sc">$</span>clc)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(clc_point[<span class="st">"clc"</span>], <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">cex =</span> <span class="dv">2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -492,6 +496,17 @@ Il est ensuite possible de les transformer en objets <code>sf</code> avec la fon
 </div>
 </div>
 </div>
+</section>
+<section id="exercice" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="exercice">Exercice</h2>
+<ol type="1">
+<li><p>Reprojetez les données raster d’altitude dans le système de coordonnées Lambert 93 et découpez la pour la faire correspondre aux limites communales de Catus.</p></li>
+<li><p>Quelles sont les altitudes minimales et maximales au sein de la commune de Catus ?</p></li>
+<li><p>Faites de même avec les données d’occupation du sol. N’oubliez pas d’attribuer les intitulés réels des types d’occupation du sol.</p></li>
+<li><p>Combien de modalités différentes d’occupation du sol peut-on observer dans la commune de Catus ? Laquelle est la plus présente ?</p></li>
+<li><p>Reclassifiez ces modalités selon les nomenclatures CORINE Land Cover de niveaux 2 et 1.</p></li>
+<li><p>Convertissez l’objet raster en vecteur.</p></li>
+</ol>
 
 
 </section>
