@@ -1,7 +1,27 @@
-library(terra)
-library(sf)
-# 1. Reprojetez les données raster d'altitude dans le système de coordonnées Lambert 93 et  découpez la pour la faire correpondre aux limites communales de Catus
+---
+title: "Géomatique avec R - Exercices Raster"
+toc: true
+highlight-style: atom-one
+output-file: Exercices
+output-ext: html
+self-contained: true
+knitr:
+  opts_chunk: 
+    comment: "#>" 
+---
 
+
+
+```{r}
+library(sf)
+library(terra)
+```
+
+
+### 1. Reprojetez les données raster d'altitude dans le système de coordonnées Lambert 93 et  découpez la pour la faire correpondre aux limites communales de Catus
+
+
+```{r}
 # Importer le raster
 elev_raw <- rast("data/elevation.tif") 
 
@@ -25,14 +45,20 @@ plot(catus, add = TRUE)
 # Mask
 mask_catus <- mask(crop_catus, catus)
 plot(mask_catus)
+```
 
 
-# 2. Quelles sont les altitudes minimales et maximales au sein de la commune de Catus ?
+### 2. Quelles sont les altitudes minimales et maximales au sein de la commune de Catus ?
+
+```{r}
 mask_catus
+```
 
 
-# 3. Faites de même avec les données d'occupation du sol. N'oubliez pas de convertir les intitulés réels des types d’occupation du sol.
 
+### 3. Faites de même avec les données d'occupation du sol. N'oubliez pas de convertir les intitulés réels des types d’occupation du sol.
+
+```{r}
 # Importer le raster
 clc_raw <- rast("data/clc.tif") 
 
@@ -83,10 +109,12 @@ plot(mask_catus, levels = intitule_poste,
      col = couleur_off,  type = "classes")
 
 mask_catus
+```
 
-# Afficher seulement les entités présentes (légende)
 
-# 4. Combien de modalités différentes ? Reclassifiez les
+### 4. Combien de modalités différentes ? Reclassifiez les
+
+```{r}
 clc_by_class <- segregate(mask_catus, keep = TRUE, other = NA)
 
 plot(clc_by_class)
@@ -104,10 +132,12 @@ plot(mask_catus,
      col = c("#FF0000", "#A600CC", "#E6E64D", "#FFE64D", "#E6CC4D", "#80FF00", "#00A600",
              "#A6F200"), 
      plg = list(cex = 0.7))
+```
 
 
-# Reclassification
+### 5 Reclassifiez ces modalités selon les nomenclatures CORINE Land Cover de niveaux 2 et 1.
 
+```{r}
 # Niveau 2
 reclassif <- matrix(c(110, 119, 1,
                       130, 139, 2,
@@ -146,11 +176,26 @@ plot(clc_3,
                 "Forêts et milieux semi-naturels"),
      col = c("#E6004D", "#FFFFA8", "#80FF00"), 
      plg = list(cex = 0.7))
+```
 
 
+### 6 Convertissez l'objet raster en vecteur
+
+```{r}
 # Convertir en vecteur
-clc_3_sf <- as.polygons(clc_3)
-clc_3_sf <- st_as_sf(clc_3_sf)
+clc_3_poly <- as.polygons(clc_3)
+clc_3_poly <- st_as_sf(clc_3_poly)
 
-plot(clc_3_sf)
+plot(clc_3_poly)
+
+
+clc_3_pts <- as.points(clc_3)
+clc_3_pts <- st_as_sf(clc_3_pts)
+
+plot(clc_3_pts, pch = 20)
+
+object.size(clc_3_poly)
+object.size(clc_3_pts)
+
+```
 
